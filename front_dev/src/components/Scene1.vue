@@ -11,15 +11,18 @@
     </div>
     <div> <!-- A -->
       <div class="A1" @click="Q1_method(0)">
-        <img src="../assets/A1.svg" />
+        <img v-if = "Q1_active1" src="../assets/A1_active.svg" />
+        <img v-else src="../assets/A1.svg"/>
         <p> 京都。 </p>
       </div>
       <div class="A2" @click="Q1_method(1)">
-        <img src="../assets/A2.svg" />
+        <img v-if = "Q1_active2" src="../assets/A2_active.svg" />
+        <img v-else src="../assets/A2.svg"/>
         <p> 大阪！ </p>
       </div>
       <div class="A3" @click="Q1_method(2)">
-        <img src="../assets/A3.svg" />
+        <img v-if = "Q1_active3" src="../assets/A3_active.svg" />
+        <img v-else src="../assets/A3.svg"/>
         <p> 神戸！！ </p>
       </div>
     </div>
@@ -123,15 +126,15 @@
           </div>
         </div>
         <div> <!-- A -->
-          <div class="A1" @click="Q5_method(0)">
+          <div class="A1" @click="Q5_method(3000)">
             <img src="../assets/A1.svg" />
             <p> 節約で…（¥3,000） </p>
           </div>
-          <div class="A2" @click="Q5_method(1)">
+          <div class="A2" @click="Q5_method(10000)">
             <img src="../assets/A2.svg" />
             <p> 普通。 （¥10,000）</p>
           </div>
-          <div class="A3" @click="Q5_method(2)">
+          <div class="A3" @click="Q5_method(50000)">
             <img src="../assets/A3.svg" />
             <p> ☆GOYU☆（¥50,000） </p>
           </div>
@@ -187,6 +190,8 @@
           </div>
        <p v-show="show7" class="send" @click="post">Let's plan !</p>
        <p v-show="show9" >{{result.Name}}</p>
+       <p v-show="show9" >{{result.OpeningHours}}</p>
+       
 </div>
 
 </template>
@@ -199,8 +204,8 @@
       return{
         date:{
             region:[],
-            date_date:null,
-            date_time:null,
+            date:null,
+            time:[],
             tension:null,
             play:[],
             budget:null,
@@ -218,6 +223,9 @@
         show7:false,
         show8:false,
         show9:false,
+        Q1_active1:false,
+        Q1_active2:false,
+        Q1_active3:false,
         value1: ''
         }
     },
@@ -225,17 +233,41 @@
         Q1_method(region_id){
             if(this.date.region.indexOf(region_id)== -1){
                  this.date.region.push(region_id)
+                 if(region_id == 0){
+                     this.Q1_active1 = true
+                 }
+                 else if (region_id == 1){
+                     this.Q1_active2 = true
+                 }
+                 else{
+                     this.Q1_active3 = true
+                 }
             }
             else{
                 var target = this.date.region.indexOf(region_id)
                 this.date.region.splice(target,1)
+                if(region_id == 0){
+                     this.Q1_active1 =false
+                 }
+                 else if (region_id == 1){
+                     this.Q1_active2 = false
+                 }
+                 else{
+                     this.Q1_active3 = false
+                 }
             }
             console.log("region"+this.date.region)
             
         },
         Q2_method(date_id){
-            this.date.time = date_id
-            console.log("date_time"+this.date.time)
+            if(this.date.time.indexOf(date_id)== -1){
+                 this.date.time.push(date_id)
+            }
+            else{
+                var target = this.date.time.indexOf(date_id)
+                this.date.time.splice(target,1)
+            }
+            console.log("time"+this.date.time)
             this.date.date = parseInt(this.value1/1000)
             console.log(this.date.date)
             this.show3 = true
@@ -272,7 +304,8 @@
         
         post(){
             // POST
-            this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
+            this.$axios.post('http://localhost:9000',{
+            //this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
                 data:this.date,
                 })
                 .then(response => {
