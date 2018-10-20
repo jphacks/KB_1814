@@ -1,5 +1,6 @@
 import requests
 import json
+import codecs
 import random
 
 #GoogleAPI
@@ -33,35 +34,31 @@ def getspot(location, typelist, mode): #location:検索基点，typelist:検索�
     #     radius = 6000
 
     # APIのURLを得る
-    # url = api.format(latitude=lat, longitude=lng, range=radius, type="restaurant", key=apikey)
     url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + str(lat) + "," + str(lng) + "&radius=" + radius + "&type=" + locatetype + "&key=" + apikey
-    print(url)
-    print(type(url))
 
     # 実際にAPIにリクエストを送信して結果を取得する
     r = requests.get(url)
-    # r = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.665442,135.4323382&radius=2000&type=restaurant&key=AIzaSyCjkB7m10FzO5J7CjSaMh3r1EeErOk3eW8')
 
     # 結果はJSON形式なのでデコードする
     data = json.loads(r.text)
     json_dict = data['results']
 
     # 検索結果
-    for spot in json_dict:
-        print('Name：{}'.format(spot['name']))
-        print('レート：{}'.format(spot['rating']))
+    # for spot in json_dict:
+    #     print('Name：{}'.format(spot['name']))
+    #     print('レート：{}'.format(spot['rating']))
 
     #高レートのお店をサジェスト対象とする
     spotlist = []
-    print('検索対象')
+    # print('検索対象')
     for spot in json_dict:
         if(spot['rating'] >= 4.0):
-            print('Name：{}'.format(spot['name']))
-            print('レート：{}'.format(spot['rating']))
+        # if(spot['rating'] >= 2.0):
             spotlist.append(spot)
+            # print('Name：{}'.format(spot['name']))
+            # print('レート：{}'.format(spot['rating']))
 
     bestspot = random.choice(spotlist)
-
     # print(type(bestspot))
 
     return bestspot
@@ -69,7 +66,7 @@ def getspot(location, typelist, mode): #location:検索基点，typelist:検索�
 
 def getspotdetail(spot_json):
     # APIのひな型
-    api = "https://maps.googleapis.com/maps/api/place/details/json?&placeid={place}&key={key}"
+    api = "https://maps.googleapis.com/maps/api/place/details/json?language=ja&placeid={place}&key={key}"
 
     spot_dict = json.loads(spot_json)
 
@@ -122,7 +119,7 @@ def getspotdetail(spot_json):
         spotdetail_dict["Types"] = json_dict['types']
 
     print(spotdetail_dict)
-    jsondata = json.dumps(spotdetail_dict)
+    jsondata = json.dumps(spotdetail_dict, ensure_ascii=False)
     # print(jsondata)
 
     return jsondata
@@ -131,20 +128,65 @@ def getspotdetail(spot_json):
 #デバッグ用
 if __name__ == '__main__':
     list = []
-    location = [34.665442, 135.4323382]
+
+
+    #targetspot_json:最初の地点から移動する先A
+    #nexttargetspot_json:地点Aから移動する先B
+    #next2targetspot_json:地点Bから移動する先C
+
+    print('--aaa1--')
+    # location = [34.7024854, 135.4937619]    #大阪駅
+    location = [35.0037708, 135.7665593]    #河原町駅
+    # location = [34.6944793, 135.1930057]    #三宮駅
 
     spot_dict = getspot(location, list, 1)
     spot_json = json.dumps(spot_dict)
-
-    # print(type(spot_json))
-    # print(spot_json)
-
-    print('--aaa--')
     targetspot_json = getspotdetail(spot_json)
+    print('--bbb1--')
+    # print(targetspot_json)
 
-    # print(type(getspotdetail(spot_dict)))
-    print('--bbb--')
+    nextspot_dict = json.loads(targetspot_json)
+    print('--aaa2--')
+    nextlocation = [nextspot_dict['Latitude'], nextspot_dict['Longitude']]
+    print(nextlocation[0], nextlocation[1])
+    nextspot_dict = getspot(nextlocation, list, 1)
+    nextspot_json = json.dumps(nextspot_dict)
+    nexttargetspot_json = getspotdetail(nextspot_json)
+    print('--bbb2--')
+
+    nextnextspot_dict = json.loads(nexttargetspot_json)
+    print('--aaa2--')
+    nextnextlocation = [nextnextspot_dict['Latitude'], nextnextspot_dict['Longitude']]
+    print(nextnextlocation[0], nextnextlocation[1])
+    nextnextspot_dict = getspot(nextnextlocation, list, 1)
+    nextnextspot_json = json.dumps(nextnextspot_dict)
+    nextnexttargetspot_json = getspotdetail(nextnextspot_json)
+    print('--bbb2--')
+
+    goalspot_dict = json.loads(nextnexttargetspot_json)
+    print('--aaa3--')
+    goallocation = [goalspot_dict['Latitude'], goalspot_dict['Longitude']]
+
+    print(location)
+    print(nextlocation)
+    print(nextnextlocation)
+    print(goallocation)
+
     print(targetspot_json)
-    # print(getspotdetail(spot_dict))
+    print(nexttargetspot_json)
+    print(nextnexttargetspot_json)
+
+    allspot_dict = {}
+    spot1_dict = json.loads(targetspot_json)
+    spot2_dict = json.loads(nexttargetspot_json)
+    spot3_dict = json.loads(nextnexttargetspot_json)
+
+    allspot_dict.update(spot1_dict)
+    allspot_dict.update(spot2_dict)
+    allspot_dict.update(spot3_dict)
+
+    jsondata = json.dumps(allspot_dict, ensure_ascii=False)
+    print(jsondata)
+
 
 print('OK!!')
