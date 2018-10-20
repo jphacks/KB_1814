@@ -4,15 +4,16 @@ def getHtml():
     ret = ""
 
     files = os.listdir(path='./data/')
-    ret += "<td>"
+    ret += "<table>"
     for fn in files:
-        ret += "<tr>"
+        ret += "<tr><td>"
         f = open('./data/' + fn)
         line = f.read()
-        ret += line
-        ret += "</tr>"
+        ret += '<h3>' + line + '</h3>'
+        ret += "</td></tr>"
+        f.close()
         
-    ret += "</td>"
+    ret += "</table>"
 
     return ret
 
