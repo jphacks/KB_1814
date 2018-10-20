@@ -1,2 +1,0 @@
-def hoge():
-    return 'asdflkdfasjklsdfasffdsklasdflsdaffjio'
