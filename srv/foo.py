@@ -1,0 +1,2 @@
+def hoge():
+    return 'asdflkdfasjklsdfasffdsklasdflsdaffjio'
