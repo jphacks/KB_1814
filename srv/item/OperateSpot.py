@@ -15,9 +15,9 @@ import random
 # 晩：18:00~22:00
 
 
-# APIキーの指定
+# APIキーの指定 むき出し...
 apikey = "AIzaSyCjkB7m10FzO5J7CjSaMh3r1EeErOk3eW8"
-#近隣
+# 近隣
 # api = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius={range}&type={type}&key={key}"
 
 def getspot(location, typelist, mode): #location:検索基点，typelist:検索対象type, mode:移動手段
@@ -189,4 +189,3 @@ if __name__ == '__main__':
     print(jsondata)
 
 
-print('OK!!')
