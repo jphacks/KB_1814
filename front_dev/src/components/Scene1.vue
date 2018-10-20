@@ -40,19 +40,19 @@
         </div>
       </div>
       <div> <!-- A -->
-        <div class="A1" @click="show3 = !show3">
+        <div class="A1" @click="Q2_method(0)">
           <img src="../assets/A1.svg" />
           <p> 朝 </p>
         </div>
-        <div class="A2" @click="show3 = !show3">
+        <div class="A2" @click="Q2_method(1)">
           <img src="../assets/A2.svg" />
           <p> 昼 </p>
         </div>
-        <div class="A3" @click="show3 = !show3">
+        <div class="A3" @click="Q2_method(2)">
           <img src="../assets/A3.svg" />
           <p> 夕 </p>
         </div>
-        <div class="A2" @click="show3 = !show3">
+        <div class="A2" @click="Q2_method(3)">
           <img src="../assets/A1.svg" />
           <p> 晩 </p>
         </div>
@@ -134,15 +134,15 @@
           </div>
         </div>
         <div> <!-- A -->
-          <div class="A1" @click="Q6_method(0)">
+          <div class="A1" @click="Q5_method(0)">
             <img src="../assets/A1.svg" />
             <p> 節約で…（¥3,000） </p>
           </div>
-          <div class="A2" @click="Q6_method(1)">
+          <div class="A2" @click="Q5_method(1)">
             <img src="../assets/A2.svg" />
             <p> 普通。 （¥10,000）</p>
           </div>
-          <div class="A3" @click="Q6_method(2)">
+          <div class="A3" @click="Q5_method(2)">
             <img src="../assets/A3.svg" />
             <p> ☆GOYU☆（¥50,000） </p>
           </div>
@@ -196,15 +196,15 @@
             <div> <!-- A -->
               <div class="A1" @click="Q6_method(0)">
                 <img src="../assets/A1.svg" />
-                <p> 健康的に徒歩！ </p>
+                <p> 徒歩</p>
               </div>
               <div class="A2" @click="Q6_method(1)">
                 <img src="../assets/A2.svg" />
-                <p> まあ、歩きかなあ </p>
+                <p> 電車 </p>
               </div>
               <div class="A3" @click="Q6_method(2)">
                 <img src="../assets/A3.svg" />
-                <p> 歩くしかない！！ </p>
+                <p> 車 </p>
               </div>
             </div>
             <div> <!-- next -->
@@ -214,7 +214,8 @@
               </div>
             </div>
           </div>
-          <el-button v-show="show7" class="transition-box" @click="post">送信</el-button>
+       <el-button v-show="show7" class="transition-box" @click="post">送信</el-button>
+         
 </div>
 </template>
 
@@ -226,15 +227,12 @@
       return{
         date:{
             region:[],
-            date_start:null,
-            date_end:null,
+            date_date:null,
+            date_time:null,
             tension:null,
-            play:null,
+            play:[],
             budget:null,
             move:null,
-        },
-        result:{
-
         },
         show1:true,
         show2:false,
@@ -257,7 +255,12 @@
                 this.date.region.splice(target,1)
             }
             console.log("region"+this.date.region)
-            this.show3 =true
+            
+        },
+        Q2_method(date_id){
+            this.date.time = date_id
+            console.log("date_time"+this.date.time)
+            this.show3 = true
         },
         Q3_method(tension_id){
             this.date.tension = tension_id
@@ -268,9 +271,15 @@
             }
         },
         Q4_method(play_id){
-            this.date.play = play_id
+            if(this.date.play.indexOf(play_id)== -1){
+                 this.date.play.push(play_id)
+            }
+            else{
+                var target = this.date.play.indexOf(play_id)
+                this.date.play.splice(target,1)
+            }
             console.log("play"+this.date.play)
-            this.show5=true
+            
         },
         Q5_method(budget_id){
             this.date.budget = budget_id
@@ -287,16 +296,17 @@
             this.date.date_end = parseInt(this.value4[1]/1000)
             console.log(this.date.date_start)
         },
-
+        
         post(){
             // POST
-            this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
+            this.$axios.post('http://localhost:9000',{
                 data:this.date,
-                
                 })
                 .then(response => {
                 //200 status header etc...
-                 console.log(response)
+                 console.log(response.data)
+                 this.result = response.data
+                 console.log(this.result)
                 })
                 .catch(error => {
                  console.log(error.response)
@@ -304,6 +314,7 @@
         }
     }
   }
+  
 
 </script>
 
@@ -402,4 +413,15 @@
   .next img{
     width: 5%;
   }
+  .button {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  width: 70pt;
+  border: solid 1px silver;
+  border-radius: 0.5rem 0.5rem;
+  padding: 0.5rem 1.5rem;
+  margin-top: 1rem;
+  text-decoration: none;
+}
 </style>
