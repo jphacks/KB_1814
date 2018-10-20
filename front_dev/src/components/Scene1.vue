@@ -23,12 +23,8 @@
         <p> 神戸！！ </p>
       </div>
     </div>
-    <div> <!-- next -->
-      <div class="next" @click="show2 = !show2">
-        <p> next </p>
-        <img src="../assets/next.svg" />
-      </div>
-    </div>
+    <!-- next -->
+    <img class="next" src="../assets/next+image.svg" @click="show2 = !show2" />
   </div>
   <!-- Q2 -->
     <div v-show="show2" class="transition">
@@ -40,6 +36,13 @@
         </div>
       </div>
       <div> <!-- A -->
+      <!-- 日付選択 -->
+        <el-date-picker
+          v-model="value1"
+          type="date"
+          placeholder="Pick a day"
+          padding= "30px">
+        </el-date-picker>
         <div class="A1" @click="Q2_method(0)">
           <img src="../assets/A1.svg" />
           <p> 朝 </p>
@@ -55,12 +58,6 @@
         <div class="A2" @click="Q2_method(3)">
           <img src="../assets/A1.svg" />
           <p> 晩 </p>
-        </div>
-      </div>
-      <div> <!-- next -->
-        <div class="next" @click="show3 = !show3">
-          <p> next </p>
-          <img src="../assets/next.svg" />
         </div>
       </div>
     </div>
@@ -87,13 +84,8 @@
         <p> テンション高いけどインドア系で！ </p>
       </div>
     </div>
-    <div> <!-- next -->
-      <div class="next" @click="show4 = !show4">
-        <p> next </p>
-        <img src="../assets/next.svg" />
-      </div>
-    </div>
   </div>
+
   <!-- Q4 -->
     <div v-show="show4" class="transition" >
       <div> <!-- Q -->
@@ -117,12 +109,9 @@
           <p> スポーツ </p>
         </div>
       </div>
-      <div> <!-- next -->
-        <div class="next" @click="show5 = !show5">
-          <p> next </p>
-          <img src="../assets/next.svg" />
-        </div>
-      </div>
+      <!-- next -->
+    <img class="next" src="../assets/next+image.svg" @click="show5 = !show5" />
+
     </div>
     <!-- Q5 -->
       <div v-show="show5" class="transition" >
@@ -147,17 +136,11 @@
             <p> ☆GOYU☆（¥50,000） </p>
           </div>
         </div>
-        <div> <!-- next -->
-          <div class="next" @click="show6 = !show6">
-            <p> next </p>
-            <img src="../assets/next.svg" />
-          </div>
-        </div>
       </div>
-      <!-- Q6 -->
+      <!-- Q5-2 -->
         <div v-show="show6" class="transition" >
           <div> <!-- Q -->
-            <img class="Q_title" src="../assets/Q6.svg" width="100"/>
+            <img class="Q_title" src="../assets/Q5-2.svg" width="100"/>
             <div class="Q">
               <img src="../assets/Qimage.svg" />
               <p> ご飯の予算は？ </p>
@@ -177,17 +160,11 @@
               <p> 豪華 </p>
             </div>
           </div>
-          <div> <!-- next -->
-            <div class="next" @click="show7 = !show7">
-              <p> next </p>
-              <img src="../assets/next.svg" />
-            </div>
-          </div>
         </div>
         <!-- Q7 -->
           <div v-show="show7" class="transition" >
             <div> <!-- Q -->
-              <img class="Q_title" src="../assets/Q7.svg" width="100"/>
+              <img class="Q_title" src="../assets/Q6.svg" width="100"/>
               <div class="Q">
                 <img src="../assets/Qimage.svg" />
                 <p> 最後に移動手段ね。 </p>
@@ -207,16 +184,11 @@
                 <p> 車 </p>
               </div>
             </div>
-            <div> <!-- next -->
-              <div class="next" @click="show8 = !show8">
-                <p> next </p>
-                <img src="../assets/next.svg" />
-              </div>
-            </div>
           </div>
-       <el-button v-show="show7" class="transition-box" @click="post">送信</el-button>
-         
+       <p v-show="show7" class="send" @click="post">Let's plan !</p>
+       <p v-show="show9" >{{result.Name}}</p>
 </div>
+
 </template>
 
 <script>
@@ -234,6 +206,9 @@
             budget:null,
             move:null,
         },
+        result:{
+
+        },
         show1:true,
         show2:false,
         show3:false,
@@ -242,7 +217,8 @@
         show6:false,
         show7:false,
         show8:false,
-        value4: [new Date(2018, 10, 10, 10, 10), new Date(2018, 10, 11, 10, 10)]
+        show9:false,
+        value1: ''
         }
     },
     methods:{
@@ -260,6 +236,8 @@
         Q2_method(date_id){
             this.date.time = date_id
             console.log("date_time"+this.date.time)
+            this.date.date = parseInt(this.value1/1000)
+            console.log(this.date.date)
             this.show3 = true
         },
         Q3_method(tension_id){
@@ -284,28 +262,24 @@
         Q5_method(budget_id){
             this.date.budget = budget_id
             console.log("budget"+this.date.budget)
-            this.show6 = true
+            this.show7 = true
         },
         Q6_method(move_id){
             this.date.move = move_id
             console.log("move"+this.date.move)
-            this.show7 = true
-        },
-        datetime(){
-            this.date.date_start = parseInt(this.value4[0]/1000)
-            this.date.date_end = parseInt(this.value4[1]/1000)
-            console.log(this.date.date_start)
+            this.show8 = true
         },
         
         post(){
             // POST
-            this.$axios.post('http://localhost:9000',{
+            this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
                 data:this.date,
                 })
                 .then(response => {
                 //200 status header etc...
                  console.log(response.data)
                  this.result = response.data
+                 this.show9 = true
                  console.log(this.result)
                 })
                 .catch(error => {
@@ -325,6 +299,7 @@
     background-image: url("../assets/back.png");
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
     /*位置*/
     margin-left: 60px;
     margin-right: 60px;
@@ -362,14 +337,15 @@
   .A1 p {
     position: absolute;
     top: 50%;
-    left: 50%;
-    /*-webkit-transform: translateY(-50%) translateX(-50%);*/
-    transform: translateY(-100%) translateX(-50%);
-    /*text-align: center;*/
+    left: 25%;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    margin:0;
+    padding:0;
+    font-size: 16px;
     }
   .A1 img {
-    /*width: 100%;*/
-    /*width:300px;*/
     width: 50%;
   }
   .A2 {
@@ -379,14 +355,15 @@
   .A2 p {
     position: absolute;
     top: 50%;
-    left: 50%;
-    /*-webkit-transform: translateY(-50%) translateX(-50%);*/
-    transform: translateY(-100%) translateX(-50%);
-    /*text-align: center;*/
+    left: 75%;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    margin:0;
+    padding:0;
+    font-size: 16px;
     }
   .A2 img {
-    /*width: 100%;*/
-    /*width:300px;*/
     width: 50%;
   }
   .A3 {
@@ -397,31 +374,25 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    /*-webkit-transform: translateY(-50%) translateX(-50%);*/
-    transform: translateY(-100%) translateX(-50%);
-    /*text-align: center;*/
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    margin:0;
+    padding:0;
+    font-size: 16px;
     }
   .A3 img {
-    /*width: 100%;*/
-    /*width:300px;*/
     width: 50%;
   }
   .next{
+    position: relative;
+    text-align: center;
+    width: 20%
   }
-  .next p{
+  .send{
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    font-size: 25px;
   }
-  .next img{
-    width: 5%;
-  }
-  .button {
-  display: block;
-  position: relative;
-  margin: 0 auto;
-  width: 70pt;
-  border: solid 1px silver;
-  border-radius: 0.5rem 0.5rem;
-  padding: 0.5rem 1.5rem;
-  margin-top: 1rem;
-  text-decoration: none;
-}
 </style>
