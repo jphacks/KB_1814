@@ -14,7 +14,7 @@ function initMap() {
     // }
 
     var location_latlng = [[34.702485,135.495951],[34.654518,135.428965],[34.700811,135.499115],[34.665442,135.432338]];
-    var minY = 180, minX = 90; maxX = 0; maxY = 0; 
+    var minY = 90, minX = 180; maxX = 0; maxY = 0; 
 
     // ルート検索の条件
     var request = {
@@ -39,7 +39,7 @@ function initMap() {
 
     // マップの生成
     var map = new google.maps.Map(document.getElementById("map"), {
-        center: new google.maps.LatLng(34.700811,135.47), // マップの中心
+        center: new google.maps.LatLng(tmpLat,tmpLng), // マップの中心
         zoom: 14 // ズームレベル
     });
 
