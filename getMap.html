@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head><style>html, body, #map { width: 100%; height: 100%; }</style></head>
+<body>
+<div id="map"></div>
+
+<script>
+function initMap() {
+    // //2次元配列を初期化(3行10列の2次元配列)
+    // var arr = new Array(10);	//0～9
+
+    // for (var i = 0; i < arr.length; i++){
+    //     arr[i] = new Array(2);	//0～1
+    // }
+
+    var location_latlng = [[34.702485,135.495951],[34.654518,135.428965],[34.700811,135.499115],[34.665442,135.432338]];
+    var minY = 180, minX = 90; maxX = 0; maxY = 0; 
+
+    // ルート検索の条件
+    var request = {
+        origin: new google.maps.LatLng(location_latlng[0][0],location_latlng[0][1]), // 出発地
+        destination: new google.maps.LatLng(location_latlng[1][0],location_latlng[1][1]), // 目的地
+        
+        waypoints: [ // 経由地点(指定なしでも可)
+            { location: new google.maps.LatLng(location_latlng[2][0],location_latlng[2][1]) },
+            { location: new google.maps.LatLng(location_latlng[3][0],location_latlng[3][1]) },
+        ],
+        travelMode: google.maps.DirectionsTravelMode.WALKING, // 交通手段(歩行。DRIVINGの場合は車)
+    };
+
+    for(var i = 0; i < location_latlng.length; i++){
+        if (minY > location_latlng[i][0])   minY = location_latlng[i][0];
+        if (minX > location_latlng[i][1])   minX = location_latlng[i][1];
+        if (maxY < location_latlng[i][0])   maxY = location_latlng[i][0];
+        if (maxX < location_latlng[i][1])   maxX = location_latlng[i][1];
+    }
+    var tmpLat = (minY + maxY)*0.5;
+    var tmpLng = (minX + maxX)*0.5;
+
+    // マップの生成
+    var map = new google.maps.Map(document.getElementById("map"), {
+        center: new google.maps.LatLng(34.700811,135.47), // マップの中心
+        zoom: 14 // ズームレベル
+    });
+
+    var d = new google.maps.DirectionsService(); // ルート検索オブジェクト
+    var r = new google.maps.DirectionsRenderer({ // ルート描画オブジェクト
+        map: map, // 描画先の地図
+        preserveViewport: true, // 描画後に中心点をずらさない
+    });
+    // ルート検索
+    d.route(request, function(result, status){
+        // OKの場合ルート描画
+        if (status == google.maps.DirectionsStatus.OK) {
+            r.setDirections(result);
+        }
+    });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjkB7m10FzO5J7CjSaMh3r1EeErOk3eW8&callback=initMap" async defer></script>
+</body>
+</html>
