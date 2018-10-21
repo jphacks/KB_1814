@@ -212,16 +212,16 @@
       :style="{width: mapWidth + 'px',height: mapHeight + 'px'}"/>
   </div>
           <div class="result" v-show="show8">
-            <p class="time"><font color="#b3b3b3">1.</font>&emsp;{{result[0].OpeningHours}}</p>
-            <p>{{result[0].Name}}</p>
+            <p class="time"><font color="#b3b3b3">1.</font>&emsp;{{result[0].Name}}</p>
+            <p>{{result[0].OpeningHours}}</p>
            </div>
            <div class="result">
-            <p class="time"><font color="#b3b3b3">2.</font>&emsp;{{result[1].OpeningHours}} </p>
-            <p>{{result[1].Name}}</p>
+            <p class="time"><font color="#b3b3b3">2.</font>&emsp;{{result[1].Name}} </p>
+            <p>{{result[1].OpeningHours}}</p>
           </div>
           <div class="result">
-            <p class="time"><font color="#b3b3b3">3.</font>&emsp;{{result[2].OpeningHours}} </p>
-            <p>{{result[2].Name}}</p>
+            <p class="time"><font color="#b3b3b3">3.</font>&emsp;{{result[2].Name}}</p>
+            <p>{{result[2].OpeningHours}}</p>
           </div>
           </div>
 </div>
@@ -453,8 +453,8 @@
         
         post(){
             // POST
-            this.$axios.post('http://localhost:9000',{
-            //this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
+            //this.$axios.post('http://localhost:9000',{
+            this.$axios.post('http://ec2-52-194-247-32.ap-northeast-1.compute.amazonaws.com:5000/condition',{
                 data:this.date,
                 })
                 .then(response => {
@@ -522,14 +522,19 @@
       });
     },
     loadMap(google) {
-      // googleMapを初期化
-      this.map = new google.maps.Map(document.getElementById("map"), {
+        
+        
+
+        // googleMapを初期化
+        this.map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
         // スワイプ判定を強めに設定(地図を移動させるには..問題)
         gestureHandling: "greedy"
-      });
-      this.addMarker();
+        });
+
+
+        this.addMarker();
     },
     release() {
       GoogleMapsLoader.release(function() {

@@ -10,9 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "ajv": "^6.5.4",
     "axios": "^0.18.0",
-    "element-theme-chalk": "^2.4.8",
     "element-ui": "^2.4.8",
     "google-maps": "^3.3.0",
     "scriptjs": "^2.5.9",
@@ -44,7 +42,6 @@
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
     "postcss-import": "^11.0.0",
-    "postcss-load-config": "^2.0.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
