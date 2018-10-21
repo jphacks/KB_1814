@@ -1,27 +1,21 @@
 from flask import Flask, jsonify, request
 import json
 
-import foo, htmlGen
+import res, htmlGen
 
 app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return 'ぷろじぇぇぇぇえええええええええ'
 
 # JSON返答
 @app.route('/tikeda')
 def tikeda():
     return jsonify({'json':'file'})
 
-@app.route('/tes')
-def tes():
-    return foo.hoge()
-
 @app.route('/condition', methods=['POST'])
 def condition():
     data = json.loads(request.data)
     print(data)
+    ret = res.createResponse(data)
+    """
     ret = {
         'Name': '十二段家 本店', 
         'PlaceId': 'ChIJP7SncMEIAWARAzHg_D_VLG0', 
@@ -31,6 +25,7 @@ def condition():
         'WebSite': 'http://junidanya-kyoto.com/', 
             'Types': ['restaurant', 'food', 'point_of_interest', 'establishment']
     }
+    """
     return jsonify(ret)
 
 @app.route('/allPlans')
