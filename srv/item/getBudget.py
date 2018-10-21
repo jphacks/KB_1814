@@ -10,6 +10,7 @@ def getBudget(a, b, c):
     headers = {"content-type": "application/json"}
     r = requests.get(url, headers=headers)
     data = r.json()
+    print("aaaa")
     # print (json.dumps(data, indent=4))
 
     budget = data['rest']['budget']
