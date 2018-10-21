@@ -20,11 +20,11 @@ apikey = "AIzaSyCjkB7m10FzO5J7CjSaMh3r1EeErOk3eW8"
 # 近隣
 # api = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={latitude},{longitude}&radius={range}&type={type}&key={key}"
 
-def getspot(location, typelist, mode): #location:検索基点，typelist:検索対象type, mode:移動手段
+def getspot(location, type, mode): #location:検索基点，typelist:検索対象type, mode:移動手段
     lat = location[0]
     lng = location[1]
 
-    locatetype = "restaurant"
+    locatetype = type
 
     if mode == 1:   #徒歩
         radius = "2000"
@@ -34,7 +34,7 @@ def getspot(location, typelist, mode): #location:検索基点，typelist:検索�
     #     radius = 6000
 
     # APIのURLを得る
-    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + str(lat) + "," + str(lng) + "&radius=" + radius + "&type=" + locatetype + "&key=" + apikey
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + str(lat) + "," + str(lng) + "&radius=" + radius + "&type=" + str(locatetype) + "&key=" + apikey
 
     # 実際にAPIにリクエストを送信して結果を取得する
     r = requests.get(url)
@@ -51,12 +51,15 @@ def getspot(location, typelist, mode): #location:検索基点，typelist:検索�
     #高レートのお店をサジェスト対象とする
     spotlist = []
     # print('検索対象')
+
     for spot in json_dict:
-        if(spot['rating'] >= 4.0):
+        if('rating' in spot and spot['rating'] >= 3.0):
         # if(spot['rating'] >= 2.0):
             spotlist.append(spot)
             # print('Name：{}'.format(spot['name']))
             # print('レート：{}'.format(spot['rating']))
+
+    if(len(spotlist) == 0): spotlist.append(spot)
 
     bestspot = random.choice(spotlist)
     # print(type(bestspot))
@@ -82,29 +85,25 @@ def getspotdetail(spot_json):
     json_dict = data['result']
     # print(type(json_dict))
 
-    print('Name：{}'.format(json_dict['name']))
-    print('Placeid：{}'.format(json_dict['place_id']))
+    # print('Name：{}'.format(json_dict['name']))
+    # print('Placeid：{}'.format(json_dict['place_id']))
 
     geo_dict = json_dict['geometry']
-    print('緯度：{}'.format(geo_dict['location']['lat']))
-    print('経度：{}'.format(geo_dict['location']['lng']))
+    # print('緯度：{}'.format(geo_dict['location']['lat']))
+    # print('経度：{}'.format(geo_dict['location']['lng']))
 
-    if('opening_hours' in json_dict):
-        print('開園時間：')
-        for time in json_dict['opening_hours']['weekday_text']:
-            print(time)
-
-    if('types' in json_dict):
-        print('タイプ：')
-        for type in json_dict['types']:
-            print(type)
-
-    if('rating' in json_dict):
-        print('レート：{}'.format(json_dict['rating']))
-
-    if('website' in json_dict):
-        print('WebSite：{}'.format(json_dict['website']))
-
+    # if('opening_hours' in json_dict):
+    #     print('開園時間：')
+    #     for time in json_dict['opening_hours']['weekday_text']:
+    #         print(time)
+    # if('types' in json_dict):
+    #     print('タイプ：')
+    #     for type in json_dict['types']:
+    #         print(type)
+    # if('rating' in json_dict):
+    #     print('レート：{}'.format(json_dict['rating']))
+    # if('website' in json_dict):
+    #     print('WebSite：{}'.format(json_dict['website']))
 
     spotdetail_dict ={}   #spotに関する詳細情報をまとめるdict
     spotdetail_dict["Name"] = json_dict['name']
@@ -112,7 +111,7 @@ def getspotdetail(spot_json):
     spotdetail_dict["Latitude"] = geo_dict['location']['lat']
     spotdetail_dict["Longitude"] = geo_dict['location']['lng']
     if('opening_hours' in json_dict):
-        spotdetail_dict["OpeningHours"] = json_dict['opening_hours']['weekday_text'][0]
+        spotdetail_dict["OpeningHours"] = json_dict['opening_hours']['weekday_text']
     if('website' in json_dict):
         spotdetail_dict["WebSite"] = json_dict['website']
     if('rating' in json_dict):
@@ -187,5 +186,3 @@ if __name__ == '__main__':
 
     jsondata = json.dumps(allspot_dict, ensure_ascii=False)
     print(jsondata)
-
-
