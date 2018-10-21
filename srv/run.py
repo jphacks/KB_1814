@@ -13,6 +13,7 @@ def tikeda():
 @app.route('/condition', methods=['POST'])
 def condition():
     data = json.loads(request.data)
+    print(data)
     ret = res.createResponse(data)
     """
     ret = {
