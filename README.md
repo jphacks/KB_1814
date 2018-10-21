@@ -1,4 +1,4 @@
-# つなげてコンシェルジュ（執筆中）
+# つなげてコンシェルジュ
 
 <!--[![Product Name](image.png)](https://www.youtube.com/watch?v=G5rULR53uMk)-->
 [![image_logo](new_logo.jpg)](https://youtu.be/Nhbre3vQo88)
