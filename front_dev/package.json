@@ -14,13 +14,9 @@
     "axios": "^0.18.0",
     "element-theme-chalk": "^2.4.8",
     "element-ui": "^2.4.8",
-<<<<<<< HEAD
     "google-maps": "^3.3.0",
     "scriptjs": "^2.5.9",
     "vue": "^2.5.2",
-=======
-    "vue": "^2.5.17",
->>>>>>> 632a3fed4e0b1071cbb39ceb6e8a935fe84aa96d
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.1",
     "vue2-google-maps": "^0.10.2"
